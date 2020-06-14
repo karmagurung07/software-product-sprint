@@ -30,10 +30,7 @@ public class DataServlet extends HttpServlet {
   @Override
   public void init() {
     greeting = new ArrayList<>();
-    greeting.add("Hello world!");
-    greeting.add("¡Hola Mundo!");
-    greeting.add("Ni hao!");
-    greeting.add("Bonjour le monde!");
+    greeting.add("Hello Karma!");
   }
 
 
