@@ -34,3 +34,27 @@ async function getRandomGreetingUsingAsyncAwait() {
   const greeting = await response.text();
   document.getElementById('greeting-container').innerText = greeting;
 }
+
+//add gson
+function getServerStats() {
+  fetch('/data').then(response => response.json()).then((greeting) => {
+    // stats is an object, not a string, so we have to
+    // reference its fields to create HTML content
+
+    const statsListElement = document.getElementById('server-stats-container');
+    statsListElement.innerHTML = '';
+    statsListElement.appendChild(
+        createListElement('City:  ' + greeting[0]));
+    statsListElement.appendChild(
+        createListElement('Horoscope: ' + greeting[1]));
+    statsListElement.appendChild(
+        createListElement('Color: ' + greeting[2]));
+  });
+}
+
+/** Creates an <li> element containing text. */
+function createListElement(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
+}
