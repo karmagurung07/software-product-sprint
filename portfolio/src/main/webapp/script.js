@@ -43,12 +43,11 @@ function getServerStats() {
 
     const statsListElement = document.getElementById('server-stats-container');
     statsListElement.innerHTML = '';
-    statsListElement.appendChild(
-        createListElement('City:  ' + greeting[0]));
-    statsListElement.appendChild(
-        createListElement('Horoscope: ' + greeting[1]));
-    statsListElement.appendChild(
-        createListElement('Color: ' + greeting[2]));
+    for(var i=0; i<greeting.length; i++ ){
+        statsListElement.appendChild(
+        createListElement('Comment: ' + greeting[i]));
+    }
+   
   });
 }
 
