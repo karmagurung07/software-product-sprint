@@ -32,9 +32,6 @@ public class DataServlet extends HttpServlet {
   @Override
   public void init() {
     greeting = new ArrayList<>();
-    greeting.add("New York");
-    greeting.add("Virgo");
-    greeting.add("Green");
   }
 
 
@@ -44,12 +41,31 @@ public class DataServlet extends HttpServlet {
     Gson gson = new Gson();
     //String json = gson.toJson(greeting);
     response.getWriter().println(gson.toJson(greeting));
-
+   
     /*
     String greet = greeting.get((int) (Math.random() * greeting.size()));
       
     response.setContentType("text/html;");
     response.getWriter().println(greet); */
   }
+
+   @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // Get the input from the form.
+    String comments = getParameter(request, "userComment", "");
+    greeting.add(comments);
+    // Respond with the result.
+     response.sendRedirect("/index.html");
+    //response.setContentType("text/html;");
+    //response.getWriter().println(Arrays.toString(comments));
+  }
+    private String getParameter(HttpServletRequest request, String name, String defaultValue) {
+    String value = request.getParameter(name);
+    if (value == null) {
+      return defaultValue;
+    }
+    return value;
+  }
+
 }
 
