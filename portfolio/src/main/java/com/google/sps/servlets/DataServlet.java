@@ -14,6 +14,9 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
 import java.io.IOException;
 import com.google.gson.Gson;
 import java.util.ArrayList;
@@ -22,49 +25,51 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
+
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  private List<String> greeting;
-
   @Override
-  public void init() {
-    greeting = new ArrayList<>();
-  }
-
-
-  @Override
-  public void doGet(HttpServletRequest request, 
-  HttpServletResponse response) throws IOException {
-    Gson gson = new Gson();
-    //String json = gson.toJson(greeting);
-    response.getWriter().println(gson.toJson(greeting));
-   
-    /*
-    String greet = greeting.get((int) (Math.random() * greeting.size()));
-      
-    response.setContentType("text/html;");
-    response.getWriter().println(greet); */
-  }
-
-   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Get the input from the form.
-    String comments = getParameter(request, "userComment", "");
-    greeting.add(comments);
-    // Respond with the result.
-     response.sendRedirect("/index.html");
-    //response.setContentType("text/html;");
-    //response.getWriter().println(Arrays.toString(comments));
-  }
-    private String getParameter(HttpServletRequest request, String name, String defaultValue) {
-    String value = request.getParameter(name);
-    if (value == null) {
-      return defaultValue;
-    }
-    return value;
+
+    String Usercomment = request.getParameter("message");
+    String name = request.getParameter("name");
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    Entity messageEntity = new Entity("portfolioComments");
+    messageEntity.setProperty("name", name);
+    messageEntity.setProperty("message", Usercomment);
+    datastore.put(messageEntity);
+
+    response.sendRedirect("/index.html");
   }
 
+  @Override
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+    response.setContentType("application/json;");
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    Query query = new Query("portfolioComments");
+    PreparedQuery results = datastore.prepare(query);
+
+
+    List < Comment > comments = new ArrayList < > ();
+    for (Entity entity: results.asIterable()) {
+      String name = (String) entity.getProperty("name");
+      String Usercomment = (String) entity.getProperty("message");
+
+      Comment comment = new Comment(name, Usercomment);
+      comments.add(comment);
+    }
+
+    Gson gson = new Gson();
+
+    response.setContentType("application/json;");
+    response.getWriter().println(gson.toJson(comments));
+  }
 }
