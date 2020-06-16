@@ -18,7 +18,7 @@
 		}
 		</style>
 	</head>
-	<body>
+	<body onload="printComment()">
 
 		<div id="page">
 			<header>
@@ -206,16 +206,16 @@
 					</li>
 				</ul>
 			</nav>
+           
             <form action="/data" method="POST">
-
-                Add a comment:
-                <textarea name="userComment"></textarea>
-                <br/><br/>
-
-                <input type="submit" />
+                Your Name:
+                <textarea name="name"></textarea>
+                Your Comment:
+                <textarea name="message"></textarea>
+            <input type="submit" />
             </form>
-             <button onclick="getServerStats()">View Comments!</button>
-            <ul id="server-stats-container"></ul>
+            Comments so far:<br>
+            <ul id="comment-container"></ul>
 			
 			<footer>
 				<p>"We become what we think about."-Earl Nightangale</p>
