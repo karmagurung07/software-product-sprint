@@ -12,48 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * Adds a random greeting to the page.
- */
-/*
-function addRandomGreeting() {
-  const greetings =
-      ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
-
-  // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
-
-  // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
-}
-*/
-
-async function getRandomGreetingUsingAsyncAwait() {
-  const response = await fetch('/data');
-  const greeting = await response.text();
-  document.getElementById('greeting-container').innerText = greeting;
-}
-
-//add gson
-function getServerStats() {
-  fetch('/data').then(response => response.json()).then((greeting) => {
-    // stats is an object, not a string, so we have to
-    // reference its fields to create HTML content
-
-    const statsListElement = document.getElementById('server-stats-container');
-    statsListElement.innerHTML = '';
-    for(var i=0; i<greeting.length; i++ ){
-        statsListElement.appendChild(
-        createListElement('Comment: ' + greeting[i]));
-    }
-   
+function printComment() {
+  fetch('/data').then(response => response.json()).then((comments) => {
+    const taskListElement = document.getElementById('comment-container');
+    comments.forEach((comment) => {
+      taskListElement.appendChild(createCommentElement(comment));
+    })
   });
 }
 
-/** Creates an <li> element containing text. */
-function createListElement(text) {
-  const liElement = document.createElement('li');
-  liElement.innerText = text;
-  return liElement;
+/** Creates an element that represents a comment */
+function createCommentElement(comment) {
+  const taskElement = document.createElement('li');
+  taskElement.className = 'comment';
+//   taskElement.id = "liStyle";
+
+  const titleElement = document.createElement('span');
+  titleElement.innerText = comment.name + ":" +comment.msg;
+  taskElement.appendChild(titleElement);
+
+  return taskElement;
 }
